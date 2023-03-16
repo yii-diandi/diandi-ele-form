@@ -2,32 +2,32 @@
   <el-dialog
     :title="title"
     :visible="visible"
-    @update:visible="$emit('update:visible', $event)"
     :width="width"
+    class="ele-form-dialog"
+    v-bind="dialogAttrs"
+    @update:visible="$emit('update:visible', $event)"
     @closed="$emit('closed')"
     @open="$emit('open')"
     @opened="$emit('opened')"
-    class="ele-form-dialog"
-    v-bind="dialogAttrs"
   >
     <!-- title 插槽 -->
     <template v-slot:title>
-      <slot :title="title" name="title"></slot>
+      <slot :title="title" name="title" />
     </template>
     <ele-form
-      :formDesc="formDesc"
-      :formData="formData"
-      @input="$emit('input', $event)"
-      :isShowBackBtn="isShowBackBtn"
-      :isShowCancelBtn="isShowCancelBtn"
       ref="ele-form"
+      :form-desc="formDesc"
+      :form-data="formData"
+      :is-show-back-btn="isShowBackBtn"
+      :is-show-cancel-btn="isShowCancelBtn"
       :visible="visible"
       v-bind="$attrs"
+      @input="$emit('input', $event)"
       v-on="$listeners"
     >
       <!-- 默认插槽 -->
       <template v-slot:default>
-        <slot></slot>
+        <slot />
       </template>
 
       <!-- 作用域插槽 -->
@@ -47,12 +47,12 @@
           :options="formItem._options"
         >
           <component
+            :is="formItem._type"
+            :ref="field"
             :disabled="formItem._disabled"
             :desc="formItem"
-            :is="formItem._type"
-            :formData="formData"
+            :form-data="formData"
             :options="formItem._options"
-            :ref="field"
             :readonly="props.readonly"
             :field="field"
             :value="getValue(field)"
@@ -65,19 +65,18 @@
       <template v-slot:form-btn="{ btns }">
         <slot :btns="btns" name="form-btn">
           <el-button
-            :key="index"
-            @click="btn.click"
-            v-bind="btn.attrs"
             v-for="(btn, index) of getBtns(btns)"
-            >{{ btn.text }}</el-button
-          >
+            :key="index"
+            v-bind="btn.attrs"
+            @click="btn.click"
+          >{{ btn.text }}</el-button>
         </slot>
       </template>
     </ele-form>
 
     <!-- footer插槽 -->
     <template v-slot:footer>
-      <slot name="footer"></slot>
+      <slot name="footer" />
     </template>
   </el-dialog>
 </template>
@@ -86,8 +85,8 @@
 const cloneDeep = require('clone')
 
 export default {
-  inheritAttrs: false,
   name: 'EleFormDialog',
+  inheritAttrs: false,
   model: {
     prop: 'formData',
     event: 'input'
@@ -108,7 +107,7 @@ export default {
     // 弹窗标题
     width: {
       type: String,
-      default: '50%'
+      default: '80%'
     },
     // 弹窗其它属性
     dialogAttrs: Object,
@@ -129,6 +128,11 @@ export default {
     }
     // ... 其它属性同 vue-ele-form 组件
   },
+  data() {
+    return {
+      initVal: {}
+    }
+  },
   watch: {
     // 当关闭时, 清空数据
     visible(val) {
@@ -142,11 +146,6 @@ export default {
           })
         })
       }
-    }
-  },
-  data() {
-    return {
-      initVal: {}
     }
   },
   methods: {
@@ -167,6 +166,12 @@ export default {
           return item
         })
         .reverse()
+    },
+     // 重置表单
+    resetForm() {
+      if (this.$refs['ele-form']) {
+          this.$refs['ele-form'].resetForm()
+      }
     }
   }
 }

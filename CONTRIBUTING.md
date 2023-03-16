@@ -2,7 +2,7 @@
 
 ## 原则
 
-- 透明开发: vue-ele-form 的所有工作都直接在 [GitHub](https://github.com/dream2023/vue-ele-form) 上进行, 如果你有任何的问题或者建议, 都可以通过 [GitHub issues](https://github.com/dream2023/vue-ele-form/issues) 进行提出和处理, 不提供 QQ 或者微信等直接问题解答(不过可以进行使用讨论);
+- 透明开发: vue-ele-form 的所有工作都直接在 [GitHub](https://github.com/yii-diandi/vue-ele-form) 上进行, 如果你有任何的问题或者建议, 都可以通过 [GitHub issues](https://github.com/yii-diandi/vue-ele-form/issues) 进行提出和处理, 不提供 QQ 或者微信等直接问题解答(不过可以进行使用讨论);
 - 语义版本控制: vue-ele-form 遵循 [语义版本控制](https://semver.org/lang/zh-CN/), 每个重大更改都记录在 [changelog](./CHANGELOG.md) 文件中;
 - 分支策略: 采用主分支模型, 即 `master` 分支作为主分支, 当有新功能时, 创建 `feat/xxx` 分支, 当有 `bug` 时, 创建 `bug/xxx` 分支, 当新功能或者 bug 修改完毕, 需要发起 `pull request` , 如果管理人员审核通过, 则合并到`master`分支, 当收集到足够的 `feat/bug` , 发布版本更新;
 - 包管理工具: 推荐使用 `yarn`, 而非 `npm`;
@@ -12,13 +12,13 @@
 
 ## BUG
 
-- 在提 issue 之前, 请确保你去 [搜索](https://github.com/dream2023/vue-ele-form/issues) 过相关问题;
+- 在提 issue 之前, 请确保你去 [搜索](https://github.com/yii-diandi/vue-ele-form/issues) 过相关问题;
 - 提 issue 时, 请确保能有一个可运行的最小 demo 和 错误堆栈, 以提供复现, 最好最好还能有相关的动图演示;
 - 如果有相关问题的解决方案那就更完美了, 你可以提交一个 [Pull Request](#Pull-Request) 修复 bug;
 
 ## 新功能
 
-新功能也是通过 [issue](https://github.com/dream2023/vue-ele-form/issues) 界面提出的, 如果你想提新功能请遵循以下原则:
+新功能也是通过 [issue](https://github.com/yii-diandi/vue-ele-form/issues) 界面提出的, 如果你想提新功能请遵循以下原则:
 
 - 首先去 issue 界面, 创建一个问题, 并且概述建议, 这样才能更好的讨论和接受;
 - 如果能用代码实现自己提的建议就更完美了, 你可以参考 [Pull Request](#Pull-Request) 章节;

@@ -1,10 +1,10 @@
 <template>
   <ele-form
-    :formDesc="formDesc"
-    class="ele-form-section"
     ref="ele-form"
+    :form-desc="formDesc"
+    class="ele-form-section"
     v-bind="$attrs"
-    :formData="formData"
+    :form-data="formData"
     @input="$emit('input', $event)"
     v-on="$listeners"
   >
@@ -21,9 +21,9 @@
         name="form-content"
       >
         <div
+          v-for="(section, index) of sections"
           :key="index"
           class="ele-form-section-content"
-          v-for="(section, index) of sections"
         >
           <slot
             :icon="section.icon"
@@ -32,10 +32,10 @@
           >
             <div class="ele-form-section-header">
               <i
+                v-if="section.icon"
                 :class="section.icon"
                 style="padding-right: 10px;"
-                v-if="section.icon"
-              ></i>
+              />
               <span>{{ section.title }}</span>
             </div>
           </slot>
@@ -54,9 +54,9 @@
                   :options="formDesc[field]._options"
                 >
                   <el-col
+                    v-if="formDesc[field]._vif"
                     :key="field"
                     v-bind="formDesc[field]._colAttrs"
-                    v-if="formDesc[field]._vif"
                     :class="{ 'ele-form-col--break': formDesc[field].break }"
                   >
                     <el-form-item
@@ -64,7 +64,7 @@
                       :label-width="formDesc[field].labelWidth || null"
                       :label="
                         props.isShowLabel &&
-                        formDesc[field].isShowLabel !== false
+                          formDesc[field].isShowLabel !== false
                           ? formDesc[field]._label
                           : null
                       "
@@ -83,12 +83,12 @@
                         :options="formDesc[field]._options"
                       >
                         <component
+                          :is="formDesc[field]._type"
+                          :ref="field"
                           :disabled="formDesc[field]._disabled"
                           :desc="formDesc[field]"
-                          :is="formDesc[field]._type"
                           :options="formDesc[field]._options"
-                          :ref="field"
-                          :formData="formData"
+                          :form-data="formData"
                           :readonly="props.readonly"
                           :field="field"
                           :value="getValue(field)"
@@ -96,10 +96,10 @@
                         />
                       </slot>
                       <div
-                        class="ele-form-tip"
                         v-if="formDesc[field]._tip"
+                        class="ele-form-tip"
                         v-html="formDesc[field]._tip"
-                      ></div>
+                      />
                     </el-form-item>
                   </el-col>
                 </slot>
@@ -114,12 +114,11 @@
     <template v-slot:form-btn="{ btns }">
       <slot :btns="getBtns(btns)" name="form-btn">
         <el-button
-          :key="index"
-          @click="btn.click"
-          v-bind="btn.attrs"
           v-for="(btn, index) of btns"
-          >{{ btn.text }}</el-button
-        >
+          :key="index"
+          v-bind="btn.attrs"
+          @click="btn.click"
+        >{{ btn.text }}</el-button>
       </slot>
     </template>
   </ele-form>
@@ -144,6 +143,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      getDeepFormDesc: null
+    }
+  },
   computed: {
     formDesc() {
       return this.sections.reduce(
@@ -152,10 +156,10 @@ export default {
       )
     }
   },
-  data() {
-    return {
-      getDeepFormDesc: null
-    }
+  mounted() {
+    this.$nextTick(() => {
+      this.getDeepFormDesc = this.$refs['ele-form'].getDeepFormDesc
+    })
   },
   methods: {
     getValue(val) {
@@ -174,11 +178,6 @@ export default {
         return item
       })
     }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.getDeepFormDesc = this.$refs['ele-form'].getDeepFormDesc
-    })
   }
 }
 </script>

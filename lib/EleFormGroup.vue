@@ -1,16 +1,16 @@
 <template>
-  <el-tabs v-bind="attrs" v-model="currentGroupId" v-on="tabOn">
+  <el-tabs v-model="currentGroupId" v-bind="attrs" v-on="tabOn">
     <template v-for="item of computedGroups">
       <el-tab-pane
+        v-if="getVif(item)"
         :key="item.groupId"
         :label="item.groupLabel"
         :name="item.groupId"
-        v-if="getVif(item)"
       >
         <ele-form
-          v-bind="item.form"
-          ref="ele-form"
           v-if="item.groupId === currentGroupId"
+          ref="ele-form"
+          v-bind="item.form"
           v-on="item.on"
         >
           <template
@@ -29,25 +29,25 @@
               :options="desc._options"
             >
               <component
+                :is="desc._type"
+                :ref="field"
+                :key="index"
                 :disabled="desc._disabled"
                 :desc="desc"
-                :is="desc._type"
                 :options="desc._options"
-                :ref="field"
-                :formData="formData"
+                :form-data="formData"
                 :readonly="props.readonly"
                 :field="field"
                 :value="getValue(field)"
-                @input="setValue(field, $event)"
                 :_disabled="desc._disabled"
-                :key="index"
+                @input="setValue(field, $event)"
               />
             </slot>
           </template>
 
           <!-- 按钮插槽 -->
           <template v-slot:form-btn="{ btns }">
-            <slot :btns="btns" :name="item.groupId + '-form-btn'"></slot>
+            <slot :btns="btns" :name="item.groupId + '-form-btn'" />
           </template>
         </ele-form>
       </el-tab-pane>
@@ -74,6 +74,12 @@ export default {
     // 默认激活的tab
     activeGroupId: [String, Number]
   },
+  data() {
+    return {
+      getDeepFormDesc: null,
+      currentGroupId: ''
+    }
+  },
   computed: {
     // 所有组的表单值
     allFormData() {
@@ -95,10 +101,15 @@ export default {
       })
     }
   },
-  data() {
-    return {
-      getDeepFormDesc: null,
-      currentGroupId: ''
+  mounted() {
+    // 获取默认激活的分组
+    if (isDef(this.activeGroupId)) {
+      this.currentGroupId = this.activeGroupId
+    } else {
+      // 使用groups中的第一个
+      if (this.groups.length) {
+        this.currentGroupId = this.groups[0].groupId
+      }
     }
   },
   methods: {
@@ -117,17 +128,6 @@ export default {
         return group.vif
       } else {
         return true
-      }
-    }
-  },
-  mounted() {
-    // 获取默认激活的分组
-    if (isDef(this.activeGroupId)) {
-      this.currentGroupId = this.activeGroupId
-    } else {
-      // 使用groups中的第一个
-      if (this.groups.length) {
-        this.currentGroupId = this.groups[0].groupId
       }
     }
   }

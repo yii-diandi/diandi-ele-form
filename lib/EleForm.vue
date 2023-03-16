@@ -1,17 +1,17 @@
 <template>
-  <div class="ele-form" :class="{ 'ele-form--inline': inline }" ref="wrapper">
+  <div ref="wrapper" class="ele-form" :class="{ 'ele-form--inline': inline }">
     <el-row justify="center" type="flex">
-      <el-col :span="computedSpan">
+      <el-col :span="formSpan">
         <el-form
+          ref="form"
           :label-position="computedLabelPosition"
           :label-width="computedLabelWidth"
           :model="formData"
           :rules="computedRules"
-          @submit.native.prevent="handleSubmitForm"
-          ref="form"
           :validate-on-rule-change="false"
           :disabled="disabled"
           v-bind="formAttrs"
+          @submit.native.prevent="handleSubmitForm"
         >
           <!-- 默认插槽作为表单项 -->
           <slot />
@@ -36,9 +36,9 @@
                   :options="formItem._options"
                 >
                   <el-col
+                    v-if="formItem._vif"
                     :key="field"
                     v-bind="formItem._colAttrs"
-                    v-if="formItem._vif"
                     :class="{ 'ele-form-col--break': formItem.break }"
                   >
                     <el-form-item
@@ -64,23 +64,23 @@
                         :options="formItem._options"
                       >
                         <component
+                          :is="formItem._type"
+                          :ref="field"
                           :disabled="formItem._disabled"
                           :readonly="readonly"
                           :desc="formItem"
-                          :is="formItem._type"
                           :options="formItem._options"
-                          :ref="field"
                           :field="field"
-                          :formData="formData"
-                          @input="setValue(field, $event)"
+                          :form-data="formData"
                           :value="formData[field]"
+                          @input="setValue(field, $event)"
                         />
                       </slot>
                       <div
-                        class="ele-form-tip"
                         v-if="formItem._tip"
+                        class="ele-form-tip"
                         v-html="formItem._tip"
-                      ></div>
+                      />
                     </el-form-item>
                   </el-col>
                 </slot>
@@ -88,17 +88,17 @@
             </slot>
             <slot name="form-footer" />
             <!-- 操作按钮区 -->
-            <el-col class="ele-form-btns" v-if="btns.length">
+            <el-col v-if="btns.length" class="ele-form-btns">
               <el-form-item :label-width="inline ? '10px' : null">
                 <!-- 按钮插槽 -->
                 <slot :btns="btns" name="form-btn">
                   <el-button
-                    :key="index"
-                    @click="btn.click"
-                    v-bind="btn.attrs"
+                  style="width:200px;border-radius:4px"
                     v-for="(btn, index) of btns"
-                    >{{ btn.text }}</el-button
-                  >
+                    :key="index"
+                    v-bind="btn.attrs"
+                    @click="btn.click"
+                  >{{ btn.text }}</el-button>
                 </slot>
               </el-form-item>
             </el-col>
@@ -147,6 +147,10 @@ export default {
     inline: {
       type: Boolean,
       default: false
+    },
+    formSpan:{
+      type: Number,
+      default: 20
     },
     // 表单自身属性
     formAttrs: Object,
@@ -524,6 +528,11 @@ export default {
       this.checkLinkage()
     }
   },
+  mounted() {
+    if (this.isMock && !window.Mock) {
+      loadMockJs()
+    }
+  },
   methods: {
     getValue(field) {
       return this.formData[field]
@@ -848,11 +857,11 @@ export default {
       if (messageArr.length) {
         const h = this.$createElement
         messageArr = messageArr.map(msg => {
-          return h('div', { style: { marginBottom: '8px' } }, msg)
+          return h('div', { style: { marginBottom: '8px' }}, msg)
         })
         this.$notify.error({
           title: t('ele-form.formError'),
-          message: h('div', { style: { marginTop: '12px' } }, messageArr)
+          message: h('div', { style: { marginTop: '12px' }}, messageArr)
         })
       }
     },
@@ -961,22 +970,17 @@ export default {
     resetForm() {
       this.$emit('reset')
       this.$refs.form.resetFields()
-
       // 调用内部方法进行值的重置
       this.$refs.form.fields.forEach(field => {
-        this.formData[field.prop] = field.initialValue
+        // this.formData[field.prop] = field.initialValue
+        this.formData[field.prop] = ''
       })
-    }
-  },
-  mounted() {
-    if (this.isMock && !window.Mock) {
-      loadMockJs()
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 .ele-form--inline .ele-form-btns {
   width: auto;
 }
@@ -1006,5 +1010,11 @@ export default {
 .ele-form-full-line.el-select,
 .ele-form-full-line.el-autocomplete {
   width: 100%;
+}
+.el-form--label-right{
+  .el-form-item{
+    display: flow-root;
+    width: 100%;
+  }
 }
 </style>

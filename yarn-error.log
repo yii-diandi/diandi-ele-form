@@ -45,7 +45,7 @@ npm manifest:
     },
     "repository": {
       "type": "git",
-      "url": "https://github.com/dream2023/vue-ele-form"
+      "url": "https://github.com/yii-diandi/vue-ele-form"
     },
     "main": "dist/vue-ele-form.umd.min.js",
     "homepage": "https://dream2023.github.io/vue-ele-form/",

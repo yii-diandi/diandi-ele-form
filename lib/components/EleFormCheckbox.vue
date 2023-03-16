@@ -37,6 +37,15 @@ export default {
       newValue: []
     }
   },
+  watch: {
+    newValue(oldv){
+    console.log('createdoldv',this.newValue,this.attrs)
+      
+    }
+  },
+  created () {
+    console.log('created',this.newValue)
+  },
   methods: {
     customInit (val) {
       if (isUnDef(val)) {

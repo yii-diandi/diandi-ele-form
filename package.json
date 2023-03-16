@@ -1,23 +1,5 @@
 {
-  "_from": "diandi-ele-form@^0.0.7",
-  "_id": "diandi-ele-form@^0.0.7",
-  "_inBundle": false,
-  "_location": "/diandi-ele-form",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "diandi-ele-form@^0.0.7",
-    "name": "diandi-ele-form",
-    "escapedName": "diandi-ele-form",
-    "rawSpec": "^0.0.7",
-    "saveSpec": null,
-    "fetchSpec": "^0.0.7"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_spec": "diandi-ele-form@^0.0.7",
+  "name": "diandi-ele-form",
   "bundleDependencies": false,
   "config": {
     "commitizen": {
@@ -57,6 +39,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
     "husky": "^3.1.0",
+    "js-cookie": "^2.2.0",
     "json-templater": "^1.2.0",
     "lint-staged": "^9.5.0",
     "standard-version": "^7.0.0",
@@ -73,8 +56,7 @@
     "el-form"
   ],
   "license": "MIT",
-  "main": "dist/diandi-ele-form.umd.js",
-  "name": "diandi-ele-form",
+  "main": "lib/index.js",
   "private": false,
   "repository": {
     "type": "git",
@@ -91,5 +73,5 @@
     "serve": "npm run build:entry && vue-cli-service serve"
   },
   "types": "./types/index.d.ts",
-  "version": "0.0.8"
+  "version": "0.3.0"
 }
